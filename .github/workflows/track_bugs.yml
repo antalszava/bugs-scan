@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  black:
+  getbugs:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,9 +26,9 @@ jobs:
 
       - name: Collect bugs
         run: |
-          python -m track_bugs.py
+          python track_bugs.py
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ runner.os }}-wheels.zip
-          path: ./wheelhouse/*.whl
+          name: bugs.csv
+          path: ./bugs.csv
