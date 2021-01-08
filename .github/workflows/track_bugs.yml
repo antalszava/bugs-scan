@@ -1,0 +1,29 @@
+name: Scan for bugs across repos
+on:
+
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Collect bugs
+        run: |
+          python -m track_bugs.py
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-wheels.zip
+          path: ./wheelhouse/*.whl
