@@ -8,16 +8,26 @@ def get_bugs_for_repo(github_org = 'pennylaneai'):
     repos = requests.get(url_for_repos)
     repos = repos.json()
 
-    # Append SF related packages
-    repos.append("https://api.github.com/repos/XanaduAI/strawberryfields/issues?per_page=100")
-    repos.append("https://api.github.com/repos/XanaduAI/blackbird/issues?per_page=100")
-    repos.append("https://api.github.com/repos/XanaduAI/thewalrus/issues?per_page=100")
-
-    bug_db = []
+    repo_urls = []
+    repo_names = []
 
     for repo in repos:
         repo_name = repo['name']
-        issues_and_prs = requests.get(f'https://api.github.com/repos/pennylaneai/{repo_name}/issues')
+        repo_names.append(repo_name)
+        repo_urls.append(f'https://api.github.com/repos/pennylaneai/{repo_name}/issues')
+
+    # Append SF related packages
+    repo_names.append("Strawberry Fields")
+    repo_urls.append("https://api.github.com/repos/XanaduAI/strawberryfields/issues")
+    repo_names.append("Blackbird")
+    repo_urls.append("https://api.github.com/repos/XanaduAI/blackbird/issues")
+    repo_names.append("The Walrus")
+    repo_urls.append("https://api.github.com/repos/XanaduAI/thewalrus/issues")
+
+    bug_db = []
+
+    for repo_name, url in zip(repo_names, repo_urls):
+        issues_and_prs = requests.get(url)
 
         issues_and_prs = issues_and_prs.json()
         issues = [issue for issue in issues_and_prs if "pull_request" not in issue]
