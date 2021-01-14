@@ -8,6 +8,11 @@ def get_bugs_for_repo(github_org = 'pennylaneai'):
     repos = requests.get(url_for_repos)
     repos = repos.json()
 
+    # Append SF related packages
+    repos.append("https://api.github.com/repos/XanaduAI/strawberryfields/issues?per_page=100")
+    repos.append("https://api.github.com/repos/XanaduAI/blackbird/issues?per_page=100")
+    repos.append("https://api.github.com/repos/XanaduAI/thewalrus/issues?per_page=100")
+
     bug_db = []
 
     for repo in repos:
